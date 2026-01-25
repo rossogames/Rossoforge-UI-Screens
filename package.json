@@ -16,6 +16,16 @@
     "screens"
   ],
   "samples": [
+    {
+      "displayName": "Screen Template",
+      "description": "A ready-to-use screen template to quickly create new UI screens.",
+      "path": "Samples~/ScreenTemplate"
+    },
+    {
+      "displayName": "Screen usage demo",
+      "description": "Demonstrates a complete screen flow integrated with scene transitions. Requires the Scene Transition system and animator setup.",
+      "path": "Samples~/ScreenUsageDemo"
+    }
   ],
   "description": "A lightweight UI architecture package for Unity that provides a Screen-based MVC pattern for full-scene UI flows. It integrates with scene transition systems via events and is designed to be modular, reusable, and easy to extend in production projects."
 }
