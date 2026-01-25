@@ -23,7 +23,6 @@ namespace Rossoforge.UI.Screens.ScreenBase
                 RossoLogger.Error($"{GetType().Name} did not initialize its Presenter.");
 
             Presenter.OnStart();
-            Presenter.OnOpening();
         }
         private void OnDestroy()
         {

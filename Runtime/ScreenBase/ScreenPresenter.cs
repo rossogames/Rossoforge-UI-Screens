@@ -1,11 +1,14 @@
 using Rossoforge.Core.Events;
+using Rossoforge.Core.Scenes;
 using Rossoforge.Core.UI.Screens;
 using Rossoforge.Scenes.Events;
+using Rossoforge.Services;
 using Rossoforge.UI.Screens.Events;
 
 namespace Rossoforge.UI.Screens.ScreenBase
 {
     public abstract class ScreenPresenter<V, P> : IScreenPresenter,
+        IEventListener<SceneTransitionEnteringEvent>,
         IEventListener<SceneTransitionActiveEvent>,
         IEventListener<SceneTransitionExitingEvent>,
         IEventListener<SceneTransitionInactiveEvent>
@@ -13,24 +16,26 @@ namespace Rossoforge.UI.Screens.ScreenBase
         where P : ScreenPresenter<V, P>
     {
         protected readonly IEventService _eventService;
+        protected readonly ISceneService _sceneService;
 
         protected V View { get; private set; }
         public ScreenState State { get; private set; }
 
-        protected ScreenPresenter(IEventService eventService, V view)
+        protected ScreenPresenter(V view)
         {
-            _eventService = eventService;
+            _eventService = ServiceLocator.Get<IEventService>();
+            _sceneService = ServiceLocator.Get<ISceneService>();
             View = view;
         }
 
         public virtual void OnStart()
         {
-            _eventService.RegisterListener<SceneTransitionActiveEvent>(this);
             _eventService.RegisterListener<SceneTransitionExitingEvent>(this);
             _eventService.RegisterListener<SceneTransitionInactiveEvent>(this);
         }
         public virtual void OnDestroy()
         {
+            _eventService.UnregisterListener<SceneTransitionEnteringEvent>(this);
             _eventService.UnregisterListener<SceneTransitionActiveEvent>(this);
             _eventService.UnregisterListener<SceneTransitionExitingEvent>(this);
             _eventService.UnregisterListener<SceneTransitionInactiveEvent>(this);
@@ -46,6 +51,12 @@ namespace Rossoforge.UI.Screens.ScreenBase
             State = ScreenState.Active;
             View.SetInteractable(true);
             _eventService.Raise(new ScreenActivatedEvent(View));
+
+            _eventService.UnregisterListener<SceneTransitionExitingEvent>(this);
+            _eventService.UnregisterListener<SceneTransitionInactiveEvent>(this);
+
+            _eventService.RegisterListener<SceneTransitionEnteringEvent>(this);
+            _eventService.RegisterListener<SceneTransitionActiveEvent>(this);
         }
         public virtual void OnClosing()
         {
@@ -59,17 +70,21 @@ namespace Rossoforge.UI.Screens.ScreenBase
             _eventService.Raise(new ScreenDeactivatedEvent(View));
         }
 
+        public void OnEventInvoked(SceneTransitionEnteringEvent eventArg)
+        {
+            OnClosing(); // cuando la escena de transicion comienza a entrar, la escena actual se cierra
+        }
         public void OnEventInvoked(SceneTransitionActiveEvent eventArg)
         {
-            OnActivate();
+            OnDeactivate(); // cuando la escena de transicion termina de entrar (Black screen), la escena actual se desactiva
         }
         public void OnEventInvoked(SceneTransitionExitingEvent eventArg)
         {
-            OnClosing();
+            OnOpening(); // cuando la escena de transicion comienza a salir, la escena nueva se abre
         }
         public void OnEventInvoked(SceneTransitionInactiveEvent eventArg)
         {
-            OnDeactivate();
+            OnActivate(); // cuando la escena de transicion termina de salir, la escena nueva se activa
         }
     }
 }

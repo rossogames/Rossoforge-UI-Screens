@@ -4,6 +4,7 @@
     "references": [
         "Unity.TextMeshPro",
         "Rossoforge.Core",
+        "Rossoforge.Services",
         "Rossoforge.Scenes",
         "Rossoforge.UI.Controls",
         "Rossoforge.Utils"
