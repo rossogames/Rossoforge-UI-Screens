@@ -23,7 +23,7 @@
     },
     {
       "displayName": "Screen usage demo",
-      "description": "Demonstrates a complete screen flow integrated with scene transitions. Requires the Scene Transition system and animator setup.",
+      "description": "Demonstrates a complete screen flow integrated with scene transitions. Requires the Screen Template, Scene Transition system and animator setup.",
       "path": "Samples~/ScreenUsageDemo"
     }
   ],
