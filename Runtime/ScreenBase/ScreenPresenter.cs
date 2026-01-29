@@ -1,5 +1,4 @@
 using Rossoforge.Core.Events;
-using Rossoforge.Core.Scenes;
 using Rossoforge.Core.UI.Screens;
 using Rossoforge.Scenes.Events;
 using Rossoforge.Services;
@@ -16,7 +15,6 @@ namespace Rossoforge.UI.Screens.ScreenBase
         where P : ScreenPresenter<V, P>
     {
         protected readonly IEventService _eventService;
-        protected readonly ISceneService _sceneService;
 
         protected V View { get; private set; }
         public ScreenState State { get; private set; }
@@ -24,7 +22,6 @@ namespace Rossoforge.UI.Screens.ScreenBase
         protected ScreenPresenter(V view)
         {
             _eventService = ServiceLocator.Get<IEventService>();
-            _sceneService = ServiceLocator.Get<ISceneService>();
             View = view;
         }
 
